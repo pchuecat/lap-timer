@@ -4,10 +4,12 @@
 
 	import Leaflet from 'leaflet'
 
+	import type { Coord } from '$lib/types'
+
 	let { data } = $props()
 
 	let markers = $state<Array<Leaflet.CircleMarker>>([])
-	let clickPoints = $state<Array<[number, number]>>([])
+	let clickPoints = $state<Array<Coord>>([])
 
 	function clearMarkers() {
 		for (const m of markers) m.remove()
@@ -24,7 +26,7 @@
 		map.fitBounds(polyline.getBounds())
 
 		map.on('click', (e) => {
-			const point: [number, number] = [e.latlng.lat, e.latlng.lng]
+			const point = [e.latlng.lat, e.latlng.lng] as Coord
 			const index = findClosestIndex(point, data.coords)
 
 			if (index === -1) {
@@ -35,24 +37,41 @@
 
 			clickPoints.push(point)
 
-			// Draw marker and keep track of it
-			const marker = Leaflet.circleMarker(point, {
-				radius: 4,
-				color: 'white',
-				fillColor: 'red',
-				fillOpacity: 1
-			}).addTo(map)
-			markers.push(marker)
+			markers.push(
+				Leaflet.circleMarker(point, {
+					radius: 4,
+					color: 'white',
+					fillColor: 'red',
+					fillOpacity: 1
+				}).addTo(map)
+			)
 
 			if (clickPoints.length === 2) {
 				const [p1, p2] = clickPoints
 				const i1 = findClosestIndex(p1, data.coords)
 				const i2 = findClosestIndex(p2, data.coords)
 
+				const total = data.coords.length
+
 				if (i1 !== -1 && i2 !== -1 && Math.abs(i1 - i2) > 1) {
-					const sectorStart = Math.min(i1, i2)
-					const sectorEnd = Math.max(i1, i2)
-					const sectorCoords = data.coords.slice(sectorStart, sectorEnd + 1)
+					let sectorCoords: Coord[]
+
+					const forwardDistance = (i2 - i1 + total) % total
+					const backwardDistance = (i1 - i2 + total) % total
+
+					if (forwardDistance < backwardDistance) {
+						if (i1 < i2) {
+							sectorCoords = data.coords.slice(i1, i2 + 1)
+						} else {
+							sectorCoords = [...data.coords.slice(i1), ...data.coords.slice(0, i2 + 1)]
+						}
+					} else {
+						if (i2 < i1) {
+							sectorCoords = data.coords.slice(i2, i1 + 1)
+						} else {
+							sectorCoords = [...data.coords.slice(i2), ...data.coords.slice(0, i1 + 1)]
+						}
+					}
 
 					Leaflet.polyline(sectorCoords, {
 						color: 'lime',
