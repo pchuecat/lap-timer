@@ -19,7 +19,31 @@ export const load: PageServerLoad = async () => {
     } catch { }
   }
 
-  console.log(coords.length)
+  return { coords: smoothCoords(coords) }
+}
 
-  return { coords }
+function smoothCoords(coords: [number, number][], windowSize = 5): [number, number][] {
+  const smoothed: [number, number][] = [];
+
+  for (let i = 0; i < coords.length; i++) {
+    let latSum = 0;
+    let lngSum = 0;
+    let count = 0;
+
+    for (
+      let j = i - Math.floor(windowSize / 2);
+      j <= i + Math.floor(windowSize / 2);
+      j++
+    ) {
+      if (j >= 0 && j < coords.length) {
+        latSum += coords[j][0];
+        lngSum += coords[j][1];
+        count++;
+      }
+    }
+
+    smoothed.push([latSum / count, lngSum / count]);
+  }
+
+  return smoothed;
 }
