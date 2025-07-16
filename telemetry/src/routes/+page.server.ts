@@ -1,6 +1,7 @@
 export const ssr = false
 
 import { parseNmeaSentence } from 'nmea-simple'
+import { TrackManager } from '$lib/track-manager'
 
 import type { PageServerLoad } from './$types'
 
@@ -19,7 +20,12 @@ export const load: PageServerLoad = async () => {
     } catch { }
   }
 
-  return { coords: smoothCoords(coords) }
+  const manager = await TrackManager.init('tracks.json')
+
+  return {
+    coords: smoothCoords(coords),
+    track: manager.getTrack('zuera-big')
+  }
 }
 
 function smoothCoords(coords: [number, number][], windowSize = 5): [number, number][] {

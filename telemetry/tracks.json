@@ -1,0 +1,36 @@
+[
+  {
+    "id": "zuera-big",
+    "label": "[BIG] Circuito Internacional de Zuera",
+    "geojson": "../geojson/circuito-internacional-zuera-big.geojson",
+    "center": [
+      41.827007,
+      -0.812463
+    ],
+    "defaultZoom": 18,
+    "zoomWeightMap": {
+      "16": 3,
+      "17": 5,
+      "18": 7,
+      "19": 10,
+      "20": 20
+    }
+  },
+  {
+    "id": "zuera-small",
+    "label": "[SMALL] Circuito Internacional de Zuera",
+    "geojson": "../geojson/circuito-internacional-zuera-small.geojson",
+    "center": [
+      41.829589,
+      -0.812033
+    ],
+    "defaultZoom": 18,
+    "zoomWeightMap": {
+      "16": 3,
+      "17": 5,
+      "18": 7,
+      "19": 10,
+      "20": 20
+    }
+  }
+]
