@@ -25,12 +25,31 @@
 		Leaflet.tileLayer('https://tile.osm.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19 }).addTo(map)
 
 		const geojsonLayer = Leaflet.geoJSON(data.track.geojson, {
-			style: () => ({
-				color: 'blue',
-				lineCap: 'round',
-				lineJoin: 'round',
-				weight: getTrackWeight(data.track, map.getZoom())
-			})
+			style: (feature) => {
+				switch (feature!.properties.name) {
+					case 'one':
+						return {
+							color: '#ff0000',
+							lineCap: 'round',
+							lineJoin: 'round',
+							weight: getTrackWeight(data.track, map.getZoom())
+						}
+					case 'two':
+						return {
+							color: '#0000ff',
+							lineCap: 'round',
+							lineJoin: 'round',
+							weight: getTrackWeight(data.track, map.getZoom())
+						}
+					default:
+						return {
+							color: 'blue',
+							lineCap: 'round',
+							lineJoin: 'round',
+							weight: getTrackWeight(data.track, map.getZoom())
+						}
+				}
+			}
 		}).addTo(map)
 
 		map.fitBounds(geojsonLayer.getBounds())
