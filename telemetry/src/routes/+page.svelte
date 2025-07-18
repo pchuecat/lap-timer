@@ -25,36 +25,61 @@
 		Leaflet.tileLayer('https://tile.osm.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19 }).addTo(map)
 
 		const geojsonLayer = Leaflet.geoJSON(data.track.geojson, {
-			style: (feature) => {
-				switch (feature!.properties.name) {
-					case 'one':
-						return {
-							color: '#ff0000',
-							lineCap: 'round',
-							lineJoin: 'round',
-							weight: getTrackWeight(data.track, map.getZoom())
-						}
-					case 'two':
-						return {
-							color: '#0000ff',
-							lineCap: 'round',
-							lineJoin: 'round',
-							weight: getTrackWeight(data.track, map.getZoom())
-						}
-					default:
-						return {
-							color: 'blue',
-							lineCap: 'round',
-							lineJoin: 'round',
-							weight: getTrackWeight(data.track, map.getZoom())
-						}
-				}
-			}
+			style: () => ({
+				color: 'blue',
+				lineCap: 'round',
+				lineJoin: 'round',
+				weight: getTrackWeight(data.track, map.getZoom())
+			})
 		}).addTo(map)
 
 		map.fitBounds(geojsonLayer.getBounds())
 
 		map.on('zoomend', () => geojsonLayer.setStyle({ weight: getTrackWeight(data.track, map.getZoom()) }))
+
+		// =================================================================================================================
+
+		// const geojsonLayer = Leaflet.geoJSON(data.track.geojson, {
+		// 	pointToLayer: (_feature, latlng) => {
+		// 		return Leaflet.circleMarker(latlng, {
+		// 			radius: 3,
+		// 			color: 'red',
+		// 			fillColor: 'red',
+		// 			fillOpacity: 1,
+		// 			weight: 0
+		// 		})
+		// 	}
+		// }).addTo(map)
+
+		// const geojsonLayer = Leaflet.geoJSON(data.track.geojson, {
+		// 	style: (feature) => {
+		// 		switch (feature!.properties.name) {
+		// 			case 'one':
+		// 				return {
+		// 					color: '#ff0000',
+		// 					lineCap: 'round',
+		// 					lineJoin: 'round',
+		// 					weight: getTrackWeight(data.track, map.getZoom())
+		// 				}
+		// 			case 'two':
+		// 				return {
+		// 					color: '#0000ff',
+		// 					lineCap: 'round',
+		// 					lineJoin: 'round',
+		// 					weight: getTrackWeight(data.track, map.getZoom())
+		// 				}
+		// 			default:
+		// 				return {
+		// 					color: 'blue',
+		// 					lineCap: 'round',
+		// 					lineJoin: 'round',
+		// 					weight: getTrackWeight(data.track, map.getZoom())
+		// 				}
+		// 		}
+		// 	}
+		// }).addTo(map)
+
+		// =================================================================================================================
 
 		// var polyline = Leaflet.polyline(data.coords, { color: 'blue', weight: 10 }).addTo(map)
 		// map.fitBounds(polyline.getBounds())

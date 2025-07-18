@@ -1,6 +1,6 @@
 import type { Coord } from "$lib/types"
 
-const EARTH_RADIUS_METERS = 6378137
+const EARTH_RADIUS_METERS = 6371e3
 
 function squared(x: number) {
   return x * x

@@ -2,7 +2,7 @@
   {
     "id": "zuera-big",
     "label": "[BIG] Circuito Internacional de Zuera",
-    "geojson": "../geojson/circuito-internacional-zuera-big-multi.geojson",
+    "geojson": "../geojson/circuito-internacional-zuera-big-densified.geojson",
     "center": [
       41.827007,
       -0.812463
