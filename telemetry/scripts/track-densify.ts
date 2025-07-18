@@ -1,7 +1,5 @@
 import type { FeatureCollection, Position, Feature } from "geojson"
 
-const EARTH_RADIUS_METERS = 6371e3
-
 function squared(x: number) {
   return x * x
 }
@@ -18,18 +16,18 @@ function hav(x: number) {
  * Calculates the great-circle distance between two geographic coordinates
  * using the Haversine formula.
  *
- * @param {[number, number]} pointA - The first point [latitude, longitude]
- * @param {[number, number]} pointB - The second point [latitude, longitude]
+ * @param {[number, number]} pointA - The first point [**longitude, latitude**] (GeoJSON format)
+ * @param {[number, number]} pointB - The second point [**longitude, latitude**] (GeoJSON format)
  * @returns {number} - Distance in meters between the two points
  */
-function haversine([lat1, lon1]: Position, [lat2, lon2]: Position): number {
+function haversine([lng1, lat1]: Position, [lng2, lat2]: Position): number {
   const aLat = toRad(lat1)
   const bLat = toRad(lat2)
-  const aLng = toRad(lon1)
-  const bLng = toRad(lon2)
+  const aLng = toRad(lng1)
+  const bLng = toRad(lng2)
 
   const ht = hav(bLat - aLat) + Math.cos(aLat) * Math.cos(bLat) * hav(bLng - aLng)
-  return 2 * EARTH_RADIUS_METERS * Math.atan2(Math.sqrt(ht), Math.sqrt(1 - ht))
+  return 2 * 6371e3 * Math.atan2(Math.sqrt(ht), Math.sqrt(1 - ht))
 }
 
 /**
