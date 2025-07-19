@@ -1,5 +1,5 @@
 {
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "editor.defaultFormatter": "xaver.clang-format"
+  "editor.defaultFormatter": "ms-vscode.cpptools"
 }

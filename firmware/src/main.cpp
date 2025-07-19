@@ -17,12 +17,21 @@ void displaySensorDetails(void)
   sensor_t sensor;
   bno.getSensor(&sensor);
   Serial.println("------------------------------------");
-  Serial.print  ("Sensor:       "); Serial.println(sensor.name);
-  Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
-  Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
-  Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" xxx");
-  Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" xxx");
-  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" xxx");
+  Serial.print("Sensor:       ");
+  Serial.println(sensor.name);
+  Serial.print("Driver Ver:   ");
+  Serial.println(sensor.version);
+  Serial.print("Unique ID:    ");
+  Serial.println(sensor.sensor_id);
+  Serial.print("Max Value:    ");
+  Serial.print(sensor.max_value);
+  Serial.println(" xxx");
+  Serial.print("Min Value:    ");
+  Serial.print(sensor.min_value);
+  Serial.println(" xxx");
+  Serial.print("Resolution:   ");
+  Serial.print(sensor.resolution);
+  Serial.println(" xxx");
   Serial.println("------------------------------------");
   Serial.println("");
   delay(500);
@@ -78,21 +87,24 @@ void setup(void)
 {
   Serial.begin(115200);
 
-  while (!Serial) delay(10);  // wait for serial port to open!
+  while (!Serial)
+    delay(10); // wait for serial port to open!
 
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   digitalWrite(LED_BUILTIN, LOW); // LED ON
 
-  Serial.println("Orientation Sensor Test"); Serial.println("");
+  Serial.println("Orientation Sensor Test");
+  Serial.println("");
 
   /* Initialise the sensor */
-  if(!bno.begin())
+  if (!bno.begin())
   {
     /* There was a problem detecting the BNO055 ... check your connections */
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
-    while(1);
+    while (1)
+      ;
   }
 
   delay(1000);
@@ -113,21 +125,28 @@ void setup(void)
   bno.setExtCrystalUse(true);
 }
 
-void printCalibrationOffsets(const adafruit_bno055_offsets_t &cal) {
+void printCalibrationOffsets(const adafruit_bno055_offsets_t &cal)
+{
   Serial.println("📦 Calibration Data:");
   Serial.print("  Accel Offset X/Y/Z: ");
-  Serial.print(cal.accel_offset_x); Serial.print(", ");
-  Serial.print(cal.accel_offset_y); Serial.print(", ");
+  Serial.print(cal.accel_offset_x);
+  Serial.print(", ");
+  Serial.print(cal.accel_offset_y);
+  Serial.print(", ");
   Serial.println(cal.accel_offset_z);
 
   Serial.print("  Mag Offset X/Y/Z: ");
-  Serial.print(cal.mag_offset_x); Serial.print(", ");
-  Serial.print(cal.mag_offset_y); Serial.print(", ");
+  Serial.print(cal.mag_offset_x);
+  Serial.print(", ");
+  Serial.print(cal.mag_offset_y);
+  Serial.print(", ");
   Serial.println(cal.mag_offset_z);
 
   Serial.print("  Gyro Offset X/Y/Z: ");
-  Serial.print(cal.gyro_offset_x); Serial.print(", ");
-  Serial.print(cal.gyro_offset_y); Serial.print(", ");
+  Serial.print(cal.gyro_offset_x);
+  Serial.print(", ");
+  Serial.print(cal.gyro_offset_y);
+  Serial.print(", ");
   Serial.println(cal.gyro_offset_z);
 
   Serial.print("  Accel Radius: ");
@@ -145,16 +164,18 @@ void printCalibrationOffsets(const adafruit_bno055_offsets_t &cal) {
 /**************************************************************************/
 void loop(void)
 {
-  if (digitalRead(BUTTON_PIN) == LOW && !buttonPressed) {
-    buttonPressed = true;  // prevent repeated triggers
-    delay(50);             // debounce
+  if (digitalRead(BUTTON_PIN) == LOW && !buttonPressed)
+  {
+    buttonPressed = true; // prevent repeated triggers
+    delay(50);            // debounce
 
     // check calibration state
     uint8_t system, gyro, accel, mag;
     system = gyro = accel = mag = 0;
     bno.getCalibration(&system, &gyro, &accel, &mag);
 
-    if (system == 3 && gyro == 3 && accel == 3 && mag == 3) {
+    if (system == 3 && gyro == 3 && accel == 3 && mag == 3)
+    {
       adafruit_bno055_offsets_t cal;
       bno.getSensorOffsets(cal);
 
@@ -166,13 +187,16 @@ void loop(void)
       EEPROM.end();
 
       Serial.println("✅ Calibration saved to EEPROM!");
-    } else {
+    }
+    else
+    {
       Serial.println("⚠️ Not fully calibrated. Try again.");
     }
   }
 
-  if (digitalRead(BUTTON_PIN) == HIGH) {
-    buttonPressed = false;  // reset latch
+  if (digitalRead(BUTTON_PIN) == HIGH)
+  {
+    buttonPressed = false; // reset latch
   }
 
   /* Get a new sensor event */
@@ -191,7 +215,7 @@ void loop(void)
   displayCalStatus();
 
   /* Optional: Display sensor status (debug only) */
-  //displaySensorStatus();
+  // displaySensorStatus();
 
   /* New line for the next sample */
   Serial.println("");
