@@ -22,11 +22,15 @@
 	onMount(async () => {
 		map = Leaflet.map('map', { attributionControl: false }).setView(data.track.center, data.track.defaultZoom)
 
-		Leaflet.tileLayer('https://tile.osm.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19 }).addTo(map)
+		Leaflet.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+			maxZoom: 20,
+			maxNativeZoom: 19,
+			subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+		}).addTo(map)
 
 		const geojsonLayer = Leaflet.geoJSON(data.track.geojson, {
 			style: () => ({
-				color: 'blue',
+				color: 'lime',
 				lineCap: 'round',
 				lineJoin: 'round',
 				weight: getTrackWeight(data.track, map.getZoom())
@@ -35,7 +39,7 @@
 
 		map.fitBounds(geojsonLayer.getBounds())
 
-		map.on('zoomend', () => geojsonLayer.setStyle({ weight: getTrackWeight(data.track, map.getZoom()) }))
+		// map.on('zoomend', () => geojsonLayer.setStyle({ weight: getTrackWeight(data.track, map.getZoom()) }))
 
 		// =================================================================================================================
 
